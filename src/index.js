@@ -1,12 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './App'
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { Router, Route, browserHistory } from 'react-router'
+import Logout from './components/Logout'
+import Login from './components/Login'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function verificaAutorizacao(nextState, replace) {
+    if (localStorage.getItem('auth-token') === null) {
+        replace('/?msg=você precisa estar logado para acessar o endereço');
+    }
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+    <Router history={browserHistory}>
+        <Route path='/' component={Login}></Route>
+        <Route path='/timeline' component={App} onEnter={verificaAutorizacao}></Route>
+        <Route path='logout' component={Logout}></Route>
+    </Router>
+
+
+
+
+    , document.getElementById('root'));
